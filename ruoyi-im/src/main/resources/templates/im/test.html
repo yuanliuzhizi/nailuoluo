@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LayIM 社交聊天</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/im/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">面板外的操作示例</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-btn-container LAY-senior-im-chat-demo">
+                        <button class="layui-btn" data-type="chat">自定义会话</button>
+                        <button class="layui-btn" data-type="message">接受好友的消息</button>
+                        <button class="layui-btn" data-type="messageAudio">接受音频消息</button>
+                        <button class="layui-btn" data-type="messageVideo">接受视频消息</button>
+                        <button class="layui-btn" data-type="messageTemp">接受临时会话消息</button>
+
+                        <br>
+
+                        <button class="layui-btn" data-type="add">申请好友</button>
+                        <button class="layui-btn" data-type="addqun">申请加群</button>
+                        <button class="layui-btn" data-type="addFriend">同意好友</button>
+                        <button class="layui-btn" data-type="addGroup">增加群组到主面板</button>
+                        <button class="layui-btn" data-type="removeFriend">删除主面板好友</button>
+                        <button class="layui-btn" data-type="removeGroup">删除主面板群组</button>
+
+                        <br>
+                        <button class="layui-btn" data-type="setGray">置灰离线好友</button>
+                        <button class="layui-btn" data-type="unGray">取消好友置灰</button>
+
+                        <button class="layui-btn" data-type="kefu1">在线客服一</button>
+                        <button class="layui-btn" data-type="kefu2">在线客服二</button>
+
+                        <button class="layui-btn" data-type="mobile">移动端版本</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/im/layui/layui.js"></script>
+<script>
+    layui.use('layim', function(layim){
+        //基础配置
+        layim.config({
+
+            init: {} //获取主面板列表信息，下文会做进一步介绍
+
+            //上传图片接口（返回的数据格式见下文）
+            ,uploadImage: {
+                url: '' //接口地址
+                ,type: 'post' //默认post
+            }
+
+            //上传文件接口（返回的数据格式见下文）
+            ,uploadFile: {
+                url: '' //接口地址
+                ,type: 'post' //默认post
+            }
+
+            //扩展“更多”的自定义列表，下文会做进一步介绍（如果无需扩展，剔除该项即可）
+            ,moreList: [{
+                alias: 'find'
+                ,title: '发现'
+                ,iconUnicode: '&#xe628;' //图标字体的unicode，可不填
+                ,iconClass: '' //图标字体的class类名
+            }]
+
+            //扩展工具栏，下文会做进一步介绍（如果无需扩展，剔除该项即可）
+            ,tool: [{
+                alias: 'code' //工具别名
+                ,title: '代码' //工具名称
+                ,iconUnicode: '&#xe64e;' //工具图标，参考图标文档，可不填
+                ,iconClass: '' //图标字体的class类名
+            }]
+        });
+    });
+</script>
+</body>
+</html>

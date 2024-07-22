@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>窗口qq手表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>5秒可刷新一次</h1>
+<img id="myImg">
+<div class="col-md-12">
+    <div class="form-group">
+        <div class="col-sm-12 col-sm-offset-3">
+            <button type="submit" id="getQrCodeBtn" class="btn btn-primary">点击获取登录QQ二维码</button>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+
+
+    $('#getQrCodeBtn').click(function () {
+        $.ajax({
+            url: '/qqlite/refresh', // AJAX 请求的 URL
+            type: 'GET', // 请求类型
+            dataType: 'json', // 响应数据格式为 JSON
+            success: function (resp) {
+                // AJAX 请求成功后执行的回调函数
+                // resp 是响应数据，根据实际情况进行处理
+                if (resp.code==0){
+                    let imgElement = document.getElementById("myImg");
+                    imgElement.src = "data:image/png;base64,"+ resp.base64Image;
+                }
+                if (resp.code==500){
+                    alert(resp.msg);
+                }
+            },
+            error: function (xhr, status, error) {
+                // AJAX 请求失败时执行的回调函数
+                console.error(error);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

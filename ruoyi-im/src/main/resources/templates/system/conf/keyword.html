@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>设置触发群关键自动处理配置</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>设置触发群关键自动处理配置json</h1>
+<img id="myImg">
+<div class="col-md-12">
+  <form id="myForm">
+    <fieldset>
+      <legend>黑名单qq</legend>
+      <div id="blackListContainer">
+        <!-- 使用JavaScript动态添加输入框和删除按钮 -->
+        <input type="number" min="1" max="9999999999" name="blackList" value="0">
+      </div>
+      <button type="button" onclick="addFieldItem('blackListContainer')">添加</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>群号</legend>
+      <div id="groupIdContainer">
+        <!-- 使用JavaScript动态添加输入框和删除按钮 -->
+        <input type="number" min="1" max="9999999999" name="groupId" value="0">
+      </div>
+      <button type="button" onclick="addFieldItem('groupIdContainer')">添加</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>回应对象(判断是谁的消息才生效)</legend>
+      <label><input type="radio" name="responseObject" value=""> 所有人 </label>
+      <label><input type="radio" name="responseObject" value="qz"> 群主 </label>
+      <label><input type="radio" name="responseObject" value="admin"> 管理员 </label>
+      <label><input type="radio" name="responseObject" value="all" checked> at全体成员 </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is At</legend>
+      <label><input type="radio" name="at" value="true"> 是(at本机器) </label>
+      <label><input type="radio" name="at" value="false" checked> 否(不at) </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is Reply</legend>
+      <label><input type="radio" name="reply" value="true"> 是(回复本机器人) </label>
+      <label><input type="radio" name="reply" value="false" checked> 否(不是回复) </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is Qz(无效)</legend>
+      <label><input type="radio" name="qz" value="true"> 是(是群主) </label>
+      <label><input type="radio" name="qz" value="false" checked> 否 </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is Admin(无效)</legend>
+      <label><input type="radio" name="admin" value="true"> 是(是管理) </label>
+      <label><input type="radio" name="admin" value="false" checked> 否 </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Is All</legend>
+      <label><input type="radio" name="all" value="true"> 是(at全员) </label>
+      <label><input type="radio" name="all" value="false" checked> 否 </label>
+    </fieldset>
+
+<!--    <fieldset>-->
+<!--      <legend>Regex Key(正则表达式判断是否处理消息)</legend>-->
+<!--      <input type="text" name="regexKey" value="\\b(你好|在吗)\\b">-->
+<!--    </fieldset>-->
+
+<!--    <fieldset>-->
+<!--      <legend>Msg Type(机器人怎么处理这条消息)</legend>-->
+<!--      <label><input type="radio" name="msgType" value="" checked> 不填直接发送 </label>-->
+<!--      <label><input type="radio" name="msgType" value="at"> at(艾特ta) </label>-->
+<!--      <label><input type="radio" name="msgType" value="reply"> reply(回复ta) </label>-->
+<!--      <label><input type="radio" name="msgType" value="jinyan"> jinyan(禁言此人) </label>-->
+<!--      <label><input type="radio" name="msgType" value="t"> t(t出群) </label>-->
+<!--      <label><input type="radio" name="msgType" value="ch"> ch(撤回消息) </label>-->
+<!--      <label><input type="radio" name="msgType" value="si"> si(群私聊消息) </label>-->
+<!--    </fieldset>-->
+
+<!--    <fieldset>-->
+<!--      <legend>Send Msg</legend>-->
+<!--      <textarea name="sendMsg">正则匹配成功回复文本内容</textarea>-->
+<!--    </fieldset>-->
+
+    <fieldset>
+      <legend>keywordVO关键词(是json结构,看不懂别乱改)</legend>
+      <legend>regexKey(正则表达式判断是否处理消息)例子：\\b(你好|在吗)\\b</legend>
+      <legend>msgType机器人怎么处理这条消息，这是正则匹配后的处理方式:不填直接发送|at(艾特ta)|reply(回复ta)|jinyan(禁言此人)|t(t出群)|ch(撤回消息)|si(群私聊消息)</legend>
+      <legend>sendMsg正则匹配成功回复文本内容：这是一条默认响应消息</legend>
+      <div id="keywordVO">
+        <!-- 使用JavaScript动态添加输入框和删除按钮 -->
+        <input type="textarea" width="500px" name="keywordVO" value="{&quot;msgType&quot;: &quot;at&quot;,&quot;regexKey&quot;: &quot;\\b(你好|菜单)\\b&quot;,&quot;sendMsg&quot;: &quot;这是一条默认响应消息&quot; }">
+      </div>
+      <button type="button" onclick="addFieldItemText('keywordVO')">添加</button>
+    </fieldset>
+
+    <button type="button" onclick="generateJSON()">查看JSON</button>
+    <button type="button" onclick="generateJSONAll()">查看JSON配置</button>
+    <button type="button" onclick="generateJSONAdd()">插入JSON配置</button>
+    <button type="button" onclick="generateJSONDel()">清空JSON配置</button>
+    <button type="button" onclick="generateJSONSend()">提交保存JSON配置</button>
+  </form>
+  <div id="jsonContainer">
+    <!-- 这里将显示生成的JSON结构 -->
+  </div>
+</div>
+<script>
+  var jsonList = [];
+</script>
+<script>
+  // 阻止表单默认提交行为
+  document.getElementById("myForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+  });
+
+  // 添加按钮点击事件处理函数
+  function addFieldItem(containerId) {
+    var container = document.getElementById(containerId);
+    var input = document.createElement("input");
+    input.type = "number";
+    input.min = "1";
+    input.max = "9999999999";
+    input.name = containerId.replace("Container", "");
+    container.appendChild(input);
+
+    var deleteButton = document.createElement("button");
+    deleteButton.innerText = "删除";
+    deleteButton.onclick = function() {
+      container.removeChild(input);
+      container.removeChild(deleteButton);
+    };
+    container.appendChild(deleteButton);
+  }
+
+  // 添加按钮点击事件处理函数
+  function addFieldItemText(containerId) {
+    var container = document.getElementById(containerId);
+    var input = document.createElement("input");
+    input.type = "textarea";
+    input.width = 500;
+    input.value = ",{\"msgType\": \"at\",\"regexKey\": \"\\\\b(你好|菜单)\\\\b\",\"sendMsg\": \"这是一条默认响应消息\" }";
+    input.name = containerId.replace("Container", "");
+    container.appendChild(input);
+
+    var deleteButton = document.createElement("button");
+    deleteButton.innerText = "删除";
+    deleteButton.onclick = function() {
+      container.removeChild(input);
+      container.removeChild(deleteButton);
+    };
+    container.appendChild(deleteButton);
+  }
+
+  function generateJSON() {
+    var form = document.getElementById("myForm");
+    var formData = new FormData(form);
+
+    // 将FormData对象转换为键值对对象
+    var jsonData = {};
+    for (var pair of formData.entries()) {
+      if (jsonData[pair[0]]) {
+        // 如果该字段已经存在于JSON对象中，则将其转换为数组
+        if (!Array.isArray(jsonData[pair[0]])) {
+          jsonData[pair[0]] = [jsonData[pair[0]]];
+        }
+        jsonData[pair[0]].push(pair[1]);
+      } else {
+        jsonData[pair[0]] = pair[1];
+      }
+    }
+
+    // 将JSON对象转换为字符串
+    var jsonString = JSON.stringify(jsonData, null, 2);
+
+    // 将JSON字符串显示在页面上
+    document.getElementById("jsonContainer").innerText = jsonString;
+
+  }
+
+  function generateJSONAll() {
+    var form = document.getElementById("myForm");
+    var formData = new FormData(form);
+
+    // 将FormData对象转换为键值对对象
+    var jsonData = {};
+    for (var pair of formData.entries()) {
+      if (jsonData[pair[0]]) {
+        // 如果该字段已经存在于JSON对象中，则将其转换为数组
+        if (!Array.isArray(jsonData[pair[0]])) {
+          jsonData[pair[0]] = [jsonData[pair[0]]];
+        }
+        jsonData[pair[0]].push(pair[1]);
+      } else {
+        jsonData[pair[0]] = pair[1];
+      }
+    }
+
+
+    // 将JSON对象转换为字符串
+    var jsonString = JSON.stringify(jsonList, null, 2);
+
+    // 将JSON字符串显示在页面上
+    document.getElementById("jsonContainer").innerText = "这是全部已插入json配置："+jsonString;
+
+  }
+
+  function generateJSONAdd() {
+    var form = document.getElementById("myForm");
+    var formData = new FormData(form);
+
+    // 将FormData对象转换为键值对对象
+    var jsonData = {};
+    for (var pair of formData.entries()) {
+      if (jsonData[pair[0]]) {
+        // 如果该字段已经存在于JSON对象中，则将其转换为数组
+        if (!Array.isArray(jsonData[pair[0]])) {
+          jsonData[pair[0]] = [jsonData[pair[0]]];
+        }
+        jsonData[pair[0]].push(pair[1]);
+      } else {
+        jsonData[pair[0]] = pair[1];
+      }
+    }
+
+    // 判断 JSON 数组的长度是否超过 10
+    if (jsonList.length > 10) {
+      alert('JSON 数组长度不可超过 10');
+    } else {
+      //插入jsonlist
+      jsonList.push(jsonData);
+    }
+
+    // 将JSON对象转换为字符串
+    var jsonString = JSON.stringify(jsonData, null, 2);
+
+    // 将JSON字符串显示在页面上
+    document.getElementById("jsonContainer").innerText = "这是插入的json配置："+jsonString;
+
+  }
+
+  function generateJSONDel() {
+    var form = document.getElementById("myForm");
+    var formData = new FormData(form);
+
+    // 将FormData对象转换为键值对对象
+    var jsonData = {};
+    for (var pair of formData.entries()) {
+      if (jsonData[pair[0]]) {
+        // 如果该字段已经存在于JSON对象中，则将其转换为数组
+        if (!Array.isArray(jsonData[pair[0]])) {
+          jsonData[pair[0]] = [jsonData[pair[0]]];
+        }
+        jsonData[pair[0]].push(pair[1]);
+      } else {
+        jsonData[pair[0]] = pair[1];
+      }
+    }
+
+    jsonList = [];
+    alert("配置已清空,请重新插入")
+
+  }
+
+  function generateJSONSend() {
+    var keywordConfVO = [];
+    for (var json of jsonList) {
+      // 取出参数值
+      let admin = json.admin=="true"?true:false;
+      let all = json.all=="true"?true:false;
+      let at = json.at=="true"?true:false;
+      let qz = json.qz=="true"?true:false;
+      let reply = json.reply=="true"?true:false;
+      let responseObject = json.responseObject;
+
+      let groupId = json.groupId;
+      let groupIdList = [];
+      if (typeof groupId=='string') {
+        groupIdList.push(parseInt(groupId));
+      }else {
+        for (let num of groupId) {
+          groupIdList.push(parseInt(num));
+        }
+      }
+
+      let blackList = json.blackList;
+      let blackListList = [];
+      if (typeof blackList=='string') {
+        blackListList.push(parseInt(blackList));
+      }else {
+        for (let num of blackList) {
+          blackListList.push(parseInt(num));
+        }
+      }
+      let keywordVO = json.keywordVO;
+      let keywordVOList = [];
+      if (typeof keywordVO=='string') {
+        let keywordVOJson = JSON.parse(keywordVO);
+        let msgType = keywordVOJson.msgType;
+        let regexKey = keywordVOJson.regexKey;
+        let sendMsg = keywordVOJson.sendMsg;
+        let obj = {
+          "msgType": msgType,
+          "regexKey": regexKey,
+          "sendMsg": sendMsg
+        };
+        keywordVOList.push(obj);
+      }else {
+        for (let json of keywordVO) {
+          let keywordVOJson = JSON.parse(json);
+          let msgType = keywordVOJson.msgType;
+          let regexKey = keywordVOJson.regexKey;
+          let sendMsg = keywordVOJson.sendMsg;
+          let obj = {
+            "msgType": msgType,
+            "regexKey": regexKey,
+            "sendMsg": sendMsg
+          };
+          keywordVOList.push(obj);
+        }
+      }
+
+
+      // 创建第一个 JSON 对象
+      var obj1 = {
+        "admin": admin,
+        "all": all,
+        "at": at,
+        "qz": qz,
+        "reply": reply,
+        "responseObject": responseObject,
+        "groupId": groupIdList,
+        "blackList": blackListList,
+        "keywordVO": keywordVOList,
+      };
+      keywordConfVO.push(obj1);
+    }
+
+// 创建一个 JSON 对象，将 JSON 数组作为属性放入其中
+    var jsonObject = {
+      "keywordConfVO": jsonList
+    };
+
+    console.log(jsonObject);
+    $.ajax({
+      url: '/qqlite/keyword/commit', // AJAX 请求的 URL
+      type: 'POST', // 请求类型
+      dataType: 'json', // 响应数据格式为 JSON
+      contentType: 'application/json',
+      data: JSON.stringify({
+        keywordConfVO: keywordConfVO
+      }),
+      success: function (resp) {
+        // AJAX 请求成功后执行的回调函数
+        // resp 是响应数据，根据实际情况进行处理
+        console.error(resp);
+      },
+      error: function (xhr, status, error) {
+        // AJAX 请求失败时执行的回调函数
+        console.error(error);
+      }
+    });
+
+  }
+
+
+</script>
+
+<script th:inline="javascript">
+</script>
+</body>
+</html>

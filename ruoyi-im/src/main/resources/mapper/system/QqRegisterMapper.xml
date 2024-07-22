@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.im.mapper.QqRegisterMapper">
+    
+    <resultMap type="QqRegister" id="QqRegisterResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="qq"    column="qq"    />
+        <result property="tgtKey"    column="tgt_key"    />
+        <result property="tlvT0065"    column="tlv_t0065"    />
+        <result property="tlvT0018"    column="tlv_t0018"    />
+        <result property="tlvT0019"    column="tlv_t0019"    />
+    </resultMap>
+
+    <sql id="selectQqRegisterVo">
+        select id, user_id, qq, tgt_key, tlv_t0065, tlv_t0018, tlv_t0019 from qq_register
+    </sql>
+
+    <select id="selectQqRegisterList" parameterType="QqRegister" resultMap="QqRegisterResult">
+        <include refid="selectQqRegisterVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="qq != null "> and qq = #{qq}</if>
+            <if test="tgtKey != null  and tgtKey != ''"> and tgt_key = #{tgtKey}</if>
+            <if test="tlvT0065 != null  and tlvT0065 != ''"> and tlv_t0065 = #{tlvT0065}</if>
+            <if test="tlvT0018 != null  and tlvT0018 != ''"> and tlv_t0018 = #{tlvT0018}</if>
+            <if test="tlvT0019 != null  and tlvT0019 != ''"> and tlv_t0019 = #{tlvT0019}</if>
+        </where>
+    </select>
+    
+    <select id="selectQqRegisterById" parameterType="Long" resultMap="QqRegisterResult">
+        <include refid="selectQqRegisterVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectQqRegisterByQq" parameterType="Long" resultMap="QqRegisterResult">
+        <include refid="selectQqRegisterVo"/>
+        where qq = #{qq}
+        LIMIT 1
+    </select>
+
+    <insert id="insertQqRegister" parameterType="QqRegister" useGeneratedKeys="true" keyProperty="id">
+        insert into qq_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="qq != null">qq,</if>
+            <if test="tgtKey != null">tgt_key,</if>
+            <if test="tlvT0065 != null">tlv_t0065,</if>
+            <if test="tlvT0018 != null">tlv_t0018,</if>
+            <if test="tlvT0019 != null">tlv_t0019,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="qq != null">#{qq},</if>
+            <if test="tgtKey != null">#{tgtKey},</if>
+            <if test="tlvT0065 != null">#{tlvT0065},</if>
+            <if test="tlvT0018 != null">#{tlvT0018},</if>
+            <if test="tlvT0019 != null">#{tlvT0019},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQqRegister" parameterType="QqRegister">
+        update qq_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="qq != null">qq = #{qq},</if>
+            <if test="tgtKey != null">tgt_key = #{tgtKey},</if>
+            <if test="tlvT0065 != null">tlv_t0065 = #{tlvT0065},</if>
+            <if test="tlvT0018 != null">tlv_t0018 = #{tlvT0018},</if>
+            <if test="tlvT0019 != null">tlv_t0019 = #{tlvT0019},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQqRegisterById" parameterType="Long">
+        delete from qq_register where id = #{id}
+    </delete>
+
+    <delete id="deleteQqRegisterByIds" parameterType="String">
+        delete from qq_register where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
